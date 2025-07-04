@@ -13,7 +13,7 @@ import { useSearchParams } from 'react-router-dom';
 function PetList() {
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
-  // Optionally provide a UI toggle for live/mock mode (demo/dev only, not exposed in nav)
+  // Demo toggle for live/mock mode (now exposed as a UI button, default = mock mode)
   const [useLive, setUseLive] = useState(isLiveDataActive());
   // Support reading query params for filters
   const [searchParams] = useSearchParams();
@@ -80,11 +80,14 @@ function PetList() {
     return () => { isMounted = false; };
   }, [useLive]); // re-fetch on live/mock mode
 
-  // For interactive demo/dev: toggle API live/mock mode (optionally hidden in demo)
-  // const handleToggleLive = () => {
-  //   toggleLiveData(!useLive);
-  //   setUseLive(!useLive);
-  // };
+  // For interactive demo: toggle API live/mock mode (exposed as UI toggle)
+  const handleToggleLive = () => {
+    toggleLiveData(!useLive);
+    setUseLive(!useLive);
+    setLoading(true);
+    // Trigger data reload via useEffect (above)
+  };
+
   // Reset page 1 on filter change
   useEffect(() => {
     setCurrentPage(1);
@@ -133,6 +136,56 @@ function PetList() {
     }
   }
 
+  // New: Mock/Live toggle UI above filters
+  const toggleButton = (
+    <div style={{ marginBottom: 19 }}>
+      <button
+        type="button"
+        onClick={handleToggleLive}
+        style={{
+          background: useLive ? 'var(--primary)' : 'var(--bg-secondary)',
+          color: useLive ? 'var(--button-text)' : 'var(--accent)',
+          border: '1.8px solid var(--primary)',
+          borderRadius: 7,
+          fontWeight: 700,
+          fontSize: 14,
+          padding: '7.5px 20px',
+          marginRight: 8,
+          cursor: 'pointer',
+          boxShadow: useLive ? '0 2px 13px rgba(0,191,174,0.18)' : '0 0px 0 transparent',
+          transition: 'background .13s, color .13s, box-shadow .13s',
+          outline: useLive ? '2px solid var(--accent)' : 'none'
+        }}
+        aria-pressed={useLive}
+        aria-label={
+          useLive
+            ? "Viewing live pet data from the RescueGroups API (click to use Demo Mode)"
+            : "Currently using Demo Data (click to try Live Pet API)"
+        }
+        title={
+          useLive
+            ? "Showing LIVE API pets. Click to switch to mock/demo dataset."
+            : "Showing enriched DEMO (mock) pets. Click to fetch from live API (slower)."
+        }
+      >
+        {useLive ? "Live API: On" : "Demo Mode"}
+      </button>
+      <span
+        style={{
+          fontSize: 13,
+          color: "#969696",
+          marginLeft: 5,
+          fontStyle: "italic",
+          verticalAlign: "middle"
+        }}
+      >
+        {useLive
+          ? "Real adoptable pets (randomized, slower, internet required)"
+          : "Offline/enriched sample dataset (fast, includes images)"}
+      </span>
+    </div>
+  );
+
   return (
     <section
       style={{
@@ -154,6 +207,8 @@ function PetList() {
       >
         Explore Pets
       </h2>
+      {/* New: Live/Mock data toggle UI */}
+      {toggleButton}
       {/* Filters UI */}
       <div
         className="main-flexrow"
