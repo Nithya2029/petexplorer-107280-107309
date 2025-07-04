@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { formatAge } from '../utils/helpers';
 import PetDetailModal from './PetDetailModal';
+import { useFavorites } from '../hooks/useFavorites';
 
 /**
  * PUBLIC_INTERFACE
@@ -15,6 +16,10 @@ import PetDetailModal from './PetDetailModal';
 function PetCard({ pet }) {
   const navigate = useNavigate();
   const [showDetail, setShowDetail] = useState(false);
+
+  // Favorites logic
+  const [, toggleFavorite, isFavorited] = useFavorites();
+  const [recentlyToggled, setRecentlyToggled] = useState(false);
 
   /**
    * Open modal for details (mouse click), fallback: if user holds ctrl/meta or right-click, navigate to full route.
@@ -29,6 +34,30 @@ function PetCard({ pet }) {
   };
 
   const handleClose = () => setShowDetail(false);
+
+  // Toggle favorite with optimistic feedback
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    toggleFavorite(pet.id);
+    setRecentlyToggled(true);
+    setTimeout(() => setRecentlyToggled(false), 600);
+  };
+
+  const favoriteIconStyle = {
+    color: isFavorited(pet.id) ? '#E87A41' : '#c7c7c7',
+    fontSize: 24,
+    transition: 'color 0.25s',
+    cursor: 'pointer',
+    filter: recentlyToggled ? 'drop-shadow(0 0 4px #E87A41)' : 'none',
+    background: 'white',
+    borderRadius: '50%',
+    padding: 2,
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    border: '1px solid #eedfd4',
+    zIndex: 4
+  };
 
   return (
     <>
@@ -47,8 +76,18 @@ function PetCard({ pet }) {
           maxWidth: 280,
           margin: 'auto',
           transition: 'transform 0.15s',
+          position: 'relative'
         }}
       >
+        {/* Favorite/Unfavorite Star Button */}
+        <button
+          aria-label={isFavorited(pet.id) ? "Remove from favorites" : "Add to favorites"}
+          title={isFavorited(pet.id) ? "Remove from favorites" : "Add to favorites"}
+          onClick={handleFavoriteClick}
+          style={favoriteIconStyle}
+        >
+          {isFavorited(pet.id) ? '★' : '☆'}
+        </button>
         <img
           src={pet.imageURL}
           alt={pet.name}

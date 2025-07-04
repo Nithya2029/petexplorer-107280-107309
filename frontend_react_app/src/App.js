@@ -4,6 +4,7 @@ import './App.css';
 import PetList from './components/PetList';
 import PetDetail from './components/PetDetail';
 import Favorites from './components/Favorites';
+import { useFavorites } from './hooks/useFavorites';
 
 // PUBLIC_INTERFACE
 function Navbar() {
@@ -95,6 +96,9 @@ function App() {
   const [theme, setTheme] = useState('light');
   const [showFavs, setShowFavs] = useState(false);
 
+  // Favorites logic for global button
+  const [favoriteIds] = useFavorites();
+
   // Effect to apply theme to document element
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -136,7 +140,11 @@ function App() {
           </Routes>
         </main>
         <Footer />
-        <FavoritesButton onClick={() => window.location.href = '/favorites'} />
+        <FavoritesButton
+          onClick={() => window.location.href = '/favorites'}
+          count={favoriteIds.length}
+          hasFavorites={favoriteIds.length > 0}
+        />
         {/* Modal overlay for favorites preview (optional, stubbed) */}
         {showFavs && (
           <div
