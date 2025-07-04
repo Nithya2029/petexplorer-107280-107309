@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatAge } from '../utils/helpers';
 import PetDetailModal from './PetDetailModal';
 import { useFavorites } from '../hooks/useFavorites';
+import { motion } from "framer-motion";
 
 /**
  * PUBLIC_INTERFACE
@@ -61,7 +62,7 @@ function PetCard({ pet }) {
 
   return (
     <>
-      <div
+      <motion.div
         className="pet-card"
         style={{
           background: 'var(--bg-secondary)',
@@ -75,20 +76,27 @@ function PetCard({ pet }) {
           minWidth: 220,
           maxWidth: 280,
           margin: 'auto',
-          transition: 'transform 0.15s',
-          position: 'relative'
+          position: 'relative',
         }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 30 }}
+        whileHover={{ scale: 1.03, boxShadow: "0 6px 24px rgba(0,0,0,0.14)", zIndex: 6 }}
+        transition={{ type: 'spring', stiffness: 220, damping: 22, mass: 0.8 }}
+        tabIndex={0}
       >
         {/* Favorite/Unfavorite Star Button */}
-        <button
+        <motion.button
           aria-label={isFavorited(pet.id) ? "Remove from favorites" : "Add to favorites"}
           title={isFavorited(pet.id) ? "Remove from favorites" : "Add to favorites"}
           onClick={handleFavoriteClick}
           style={favoriteIconStyle}
+          whileTap={{ scale: 0.85, rotate: -14 }}
+          transition={{ type: "spring", stiffness: 400, damping: 18 }}
         >
           {isFavorited(pet.id) ? '★' : '☆'}
-        </button>
-        <img
+        </motion.button>
+        <motion.img
           src={pet.imageURL}
           alt={`Photo of ${pet.name}, a ${pet.breed}, available in ${pet.location}`}
           aria-label={`Photo of ${pet.name}, ${pet.breed}, in ${pet.location}`}
@@ -101,6 +109,9 @@ function PetCard({ pet }) {
             marginBottom: 14,
           }}
           loading="lazy"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.12, duration: 0.6, type: 'spring', stiffness: 140 }}
         />
         <h3
           style={{
@@ -139,7 +150,7 @@ function PetCard({ pet }) {
         }}>
           {pet.location}
         </div>
-        <button
+        <motion.button
           className="view-details-btn"
           style={{
             background: 'var(--button-bg)',
@@ -157,10 +168,13 @@ function PetCard({ pet }) {
             if (e.key === "Enter" || e.key === " ") handleViewDetails(e);
           }}
           aria-label={`View details about ${pet.name}`}
+          whileTap={{ scale: 0.96 }}
+          whileHover={{ scale: 1.06 }}
+          transition={{ type: 'spring', stiffness: 360, damping: 17 }}
         >
           View Details
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
       {showDetail && (
         <PetDetailModal pet={pet} onClose={handleClose} />
       )}

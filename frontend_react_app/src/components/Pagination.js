@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { motion, AnimatePresence } from "framer-motion";
 
 /**
  * PUBLIC_INTERFACE
@@ -43,7 +44,7 @@ function Pagination({ currentPage, totalPages, onPageChange, siblingCount = 1 })
         userSelect: 'none'
       }}
     >
-      <button
+      <motion.button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
@@ -57,38 +58,55 @@ function Pagination({ currentPage, totalPages, onPageChange, siblingCount = 1 })
           cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
           opacity: currentPage === 1 ? 0.56 : 1
         }}
+        whileTap={{ scale: 0.91 }}
+        whileHover={currentPage === 1 ? {} : { scale: 1.04, boxShadow: "0 2px 8px rgba(0,0,0,0.13)" }}
+        transition={{ type: "spring", stiffness: 320, damping: 14 }}
       >
         &larr; Prev
-      </button>
+      </motion.button>
 
-      {getPages().map((p, idx) =>
-        p === '...' ? (
-          <span key={`dots${idx}`} style={{ color: 'var(--text-secondary)', margin: '0 2px' }}>…</span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onPageChange(p)}
-            disabled={p === currentPage}
-            aria-current={p === currentPage ? 'page' : undefined}
-            style={{
-              background: p === currentPage ? 'var(--text-secondary)' : 'white',
-              color: p === currentPage ? 'white' : 'var(--text-primary)',
-              border: '1px solid var(--border-color)',
-              borderRadius: 7,
-              margin: '0 2px',
-              padding: '7px 13px',
-              fontWeight: p === currentPage ? 700 : 500,
-              fontSize: 16,
-              cursor: p === currentPage ? 'default' : 'pointer',
-              transition: 'background 0.14s'
-            }}
-          >
-            {p}
-          </button>
-        )
-      )}
+      <AnimatePresence initial={false}>
+        {getPages().map((p, idx) =>
+          p === '...' ? (
+            <motion.span
+              key={`dots${idx}`}
+              style={{ color: 'var(--text-secondary)', margin: '0 2px' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >…</motion.span>
+          ) : (
+            <motion.button
+              key={p}
+              onClick={() => onPageChange(p)}
+              disabled={p === currentPage}
+              aria-current={p === currentPage ? 'page' : undefined}
+              style={{
+                background: p === currentPage ? 'var(--text-secondary)' : 'white',
+                color: p === currentPage ? 'white' : 'var(--text-primary)',
+                border: '1px solid var(--border-color)',
+                borderRadius: 7,
+                margin: '0 2px',
+                padding: '7px 13px',
+                fontWeight: p === currentPage ? 700 : 500,
+                fontSize: 16,
+                cursor: p === currentPage ? 'default' : 'pointer',
+                transition: 'background 0.14s'
+              }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 22 }}
+              whileTap={{ scale: 0.93 }}
+              whileHover={p === currentPage ? {} : { scale: 1.10, boxShadow: "0 2px 10px rgba(0,0,0,0.10)" }}
+              transition={{ type: "spring", stiffness: 320, damping: 16 }}
+            >
+              {p}
+            </motion.button>
+          )
+        )}
+      </AnimatePresence>
 
-      <button
+      <motion.button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
@@ -102,9 +120,12 @@ function Pagination({ currentPage, totalPages, onPageChange, siblingCount = 1 })
           cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
           opacity: currentPage === totalPages ? 0.56 : 1
         }}
+        whileTap={{ scale: 0.91 }}
+        whileHover={currentPage === totalPages ? {} : { scale: 1.04, boxShadow: "0 2px 8px rgba(0,0,0,0.13)" }}
+        transition={{ type: "spring", stiffness: 320, damping: 14 }}
       >
         Next &rarr;
-      </button>
+      </motion.button>
     </nav>
   );
 }
