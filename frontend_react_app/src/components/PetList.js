@@ -4,6 +4,9 @@ import PetCard from './PetCard';
 import Filters from './Filters';
 import Pagination from './Pagination';
 import { useSearchParams } from 'react-router-dom';
+import LoadingSpinner from './LoadingSpinner';
+import SkeletonCard from './SkeletonCard';
+import { AnimatePresence, motion } from "framer-motion";
 
 /**
  * PUBLIC_INTERFACE
@@ -230,25 +233,79 @@ function PetList() {
         {/* Optional for future: search bar */}
       </div>
       {loading ? (
-        <div style={{ textAlign: 'center', margin: 40, fontSize: 18, color: 'var(--text-secondary)' }}>Loading...</div>
-      ) : filteredPets.length === 0 ? (
-        <div style={{ textAlign: 'center', margin: 40, fontSize: 18 }}>No pets found.</div>
-      ) : (
-        <>
-          <div
-            className="pet-card-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: 26,
-              width: '100%',
-              margin: '0 auto'
-            }}
-          >
-            {pagedPets.map((pet) => (
-              <PetCard key={pet.id} pet={pet} />
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-8 px-2">
+            {[...Array(6)].map((_, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ type: "spring", damping: 28 }}
+              >
+                <SkeletonCard />
+              </motion.div>
             ))}
           </div>
+          <LoadingSpinner message="Loading pets..." />
+        </div>
+      ) : filteredPets.length === 0 ? (
+        <motion.div
+          key="empty"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0, y: 15 }}
+          className="flex flex-col items-center justify-center py-16"
+        >
+          <div className="text-4xl" role="img" aria-label="No pets">😢</div>
+          <div className="font-bold text-secondary/80 dark:text-white/70 text-xl mt-4 mb-2">
+            No pets found!
+          </div>
+          <div className="text-gray-600 dark:text-gray-300 mb-4 max-w-md text-center">
+            Try adjusting your filters. No matches for this combination right now.<br />
+            <button
+              className="inline-block mt-3 bg-accent/90 text-secondary font-semibold rounded px-5 py-2 hover:bg-primary hover:text-white transition"
+              onClick={() => setFilters({ breed: '', ageRange: [0, 48], location: '' })}
+              type="button"
+            >
+              Reset Filters
+            </button>
+          </div>
+        </motion.div>
+      ) : (
+        <>
+          <AnimatePresence>
+            <motion.div
+              key="petgrid"
+              className="pet-card-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                gap: 26,
+                width: '100%',
+                margin: '0 auto'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, y: 30 }}
+              transition={{ duration: 0.3, staggerChildren: 0.05 }}
+            >
+              <AnimatePresence>
+                {pagedPets.map((pet) => (
+                  <motion.div
+                    key={pet.id}
+                    layout
+                    initial={{ opacity: 0, y: 28 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 24 }}
+                    transition={{ type: "spring", stiffness: 220, damping: 20 }}
+                  >
+                    <PetCard pet={pet} />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </motion.div>
+          </AnimatePresence>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

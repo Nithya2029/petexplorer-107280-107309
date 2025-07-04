@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchPetByIdWithEnrichment } from "../api";
+import LoadingSpinner from "./LoadingSpinner";
+import { motion } from "framer-motion";
 
 // Simple carousel (inline, matches modal)
 function Carousel({ images, alt, initial = 0 }) {
@@ -82,9 +84,7 @@ function PetDetail() {
   if (loading) {
     return (
       <section>
-        <div style={{ textAlign: "center", margin: 60, fontSize: 18 }}>
-          Loading...
-        </div>
+        <LoadingSpinner message="Loading pet details..." />
       </section>
     );
   }
@@ -92,9 +92,20 @@ function PetDetail() {
   if (!pet) {
     return (
       <section>
-        <div style={{ textAlign: "center", margin: 60, fontSize: 18 }}>
-          Pet not found.
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          className="flex flex-col items-center justify-center py-24"
+        >
+          <div className="text-5xl" role="img" aria-label="Missing pet">🦴</div>
+          <div className="text-2xl font-bold mt-6 mb-2 text-secondary dark:text-white/90">
+            Pet not found.
+          </div>
+          <div className="text-gray-600 dark:text-gray-200">
+            Sorry, we couldn't find that pet. Try browsing the list!
+          </div>
+        </motion.div>
       </section>
     );
   }
@@ -123,7 +134,8 @@ function PetDetail() {
   const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
 
   return (
-    <section
+    <motion.section
+      layout
       style={{
         maxWidth: 560,
         margin: "2.5rem auto",
@@ -136,6 +148,10 @@ function PetDetail() {
         position: "relative",
       }}
       aria-label={`Details about ${pet.name}`}
+      initial={{ opacity: 0, scale: 0.98, y: 25 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, y: 16 }}
+      transition={{ type: "spring", stiffness: 220, damping: 20 }}
     >
       <button
         aria-label="Back"
@@ -262,7 +278,7 @@ function PetDetail() {
           I'm Interested – WhatsApp
         </a>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
