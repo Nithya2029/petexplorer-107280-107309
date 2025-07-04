@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import LandingPage from './components/LandingPage';
 import PetList from './components/PetList';
 import PetDetail from './components/PetDetail';
 import Favorites from './components/Favorites';
@@ -133,7 +134,8 @@ function App() {
         </button>
         <main style={{ flex: '1 0 auto', padding: '2rem 0' }}>
           <Routes>
-            <Route path="/" element={<PetList />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/listings" element={<PetList />} />
             <Route path="/pets/:petId" element={<PetDetail />} />
             <Route path="/favorites" element={<Favorites />} />
             {/* Add additional routes as future features are implemented */}

@@ -3,14 +3,18 @@ import { fetchAllPets } from '../api/petsApi';
 import PetCard from './PetCard';
 import Filters from './Filters';
 import Pagination from './Pagination';
+import { useSearchParams } from 'react-router-dom';
 
 /**
  * PUBLIC_INTERFACE
  * PetList - Fetches pet data and displays in a responsive card grid with filters and pagination.
+ * Supports URL query string for initial filters (breed, ageGroup, city).
  */
 function PetList() {
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Support reading query params for filters
+  const [searchParams] = useSearchParams();
 
   // Filters state: breed, ageGroup, city
   const [filters, setFilters] = useState({
@@ -18,6 +22,24 @@ function PetList() {
     ageGroup: '',
     city: '',
   });
+
+  // On mount, sync filters from searchParams (URL query) if present
+  useEffect(() => {
+    const urlFilters = {};
+    for (const k of ['breed', 'ageGroup', 'city']) {
+      if (searchParams.get(k)) urlFilters[k] = searchParams.get(k);
+    }
+    if (
+      urlFilters.breed !== filters.breed ||
+      urlFilters.ageGroup !== filters.ageGroup ||
+      urlFilters.city !== filters.city
+    ) {
+      setFilters((prev) => ({ ...prev, ...urlFilters }));
+    }
+    // eslint-disable-next-line
+    // intentionally only on mount/params change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
