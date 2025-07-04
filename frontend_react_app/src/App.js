@@ -5,6 +5,8 @@ import PetList from './components/PetList';
 import PetDetail from './components/PetDetail';
 import Favorites from './components/Favorites';
 import { useFavorites } from './hooks/useFavorites';
+// Prepare enriched data on app load
+import { loadAndEnrichMockPets } from './api/rescueGroupsApi';
 
 // PUBLIC_INTERFACE
 function Navbar() {
@@ -74,6 +76,11 @@ function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Enrich/prime mock dataset at startup for instant experience (on first load)
+  useEffect(() => {
+    loadAndEnrichMockPets();
+  }, []);
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { fetchAllPetsWithEnrichment } from '../api';
+import { fetchAllPetsWithEnrichment, toggleLiveData, isLiveDataActive } from '../api';
 import PetCard from './PetCard';
 import Filters from './Filters';
 import Pagination from './Pagination';
@@ -7,12 +7,14 @@ import { useSearchParams } from 'react-router-dom';
 
 /**
  * PUBLIC_INTERFACE
- * PetList - Fetches pet data and displays in a responsive card grid with filters and pagination.
- * Supports URL query string for initial filters (breed, ageGroup, city).
+ * PetList - Uses enriched mockPets as the main data source (with images);
+ * supports a demo toggle for "live" API but UIs always use the image-complete/enriched dataset by default.
  */
 function PetList() {
   const [allPets, setAllPets] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Optionally provide a UI toggle for live/mock mode (demo/dev only, not exposed in nav)
+  const [useLive, setUseLive] = useState(isLiveDataActive());
   // Support reading query params for filters
   const [searchParams] = useSearchParams();
 
@@ -76,8 +78,13 @@ function PetList() {
       }
     });
     return () => { isMounted = false; };
-  }, []);
+  }, [useLive]); // re-fetch on live/mock mode
 
+  // For interactive demo/dev: toggle API live/mock mode (optionally hidden in demo)
+  // const handleToggleLive = () => {
+  //   toggleLiveData(!useLive);
+  //   setUseLive(!useLive);
+  // };
   // Reset page 1 on filter change
   useEffect(() => {
     setCurrentPage(1);

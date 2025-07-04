@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
  * PUBLIC_INTERFACE
  * Filters - dynamic filters for breed, age range, and location.
  * @param {Object} props
- * @param {Array} props.pets - list of all pets
+ * @param {Array} props.pets - list of all pets (enriched mockPet dataset)
  * @param {Object} props.filters - { breed, ageRange, location }
  * @param {Function} props.onChange - callback to set filters
  * @returns {JSX.Element}
