@@ -1,33 +1,43 @@
 /* CSS Variables for Theme Management */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #1a1a1a; /* Improved contrast (almost black) */
-  --text-secondary: #007bff; /* Changed to blue for high contrast */
-  --border-color: #ced4da;
-  --button-bg: #0069d9;
+  /* New Modern Theme: KAVIA PetExplorer */
+  --accent: #FFC107;       /* Accent color */
+  --primary: #00BFAE;      /* Brand primary */
+  --secondary: #1A202C;    /* Brand secondary (deep blue-gray) */
+
+  --bg-primary: #ffffff;   /* Lightest background */
+  --bg-secondary: #F4F8FB; /* Very light/tint background */
+  --text-primary: #1A202C; /* High-contrast near-black */
+  --text-secondary: #00BFAE; /* Primary color for highlight */
+
+  --border-color: #E3E6EB;
+  --button-bg: #00BFAE;    /* Primary button color */
   --button-text: #ffffff;
-  --focus-ring: #ffc107; /* Amber focus for accessibility */
+  --focus-ring: #FFC107;
+
+  --shadow-md: 0 2px 8px rgba(16,32,53,0.07);
+  --shadow-lg: 0 6px 32px rgba(35,41,64,0.12);
 }
 
 [data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  --bg-primary: #1A202C;
+  --bg-secondary: #232B39;
+  --text-primary: #F4F8FB;
+  --text-secondary: #FFC107;
+  --border-color: #334155;
+  --button-bg: #00BFAE;
+  --button-text: #fff;
+  --shadow-md: 0 2px 8px rgba(11,16,30,0.23);
+  --shadow-lg: 0 6px 32px rgba(35,41,64,0.22);
 }
 
 .App {
   text-align: center;
-  background-color: var(--bg-primary);
+  background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s, color 0.3s;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }
 
 .App-logo {
@@ -63,26 +73,34 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
+  background: var(--accent);
+  color: var(--secondary);
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 1.8rem;
+  padding: 9px 22px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  box-shadow: var(--shadow-md);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: 
+    background 0.18s, 
+    color 0.16s, 
+    transform 0.15s,
+    box-shadow 0.16s;
+  outline: none;
 }
-
 .theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+  background: var(--primary);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: var(--shadow-lg);
+  opacity: 1;
 }
-
 .theme-toggle:active {
-  transform: translateY(0);
+  transform: translateY(0) scale(0.98);
+  background: var(--accent);
+  color: var(--secondary);
 }
 
 @keyframes App-logo-spin {
@@ -94,7 +112,44 @@
   }
 }
 
-/* Accessible focus styles for all buttons, links, and controls */
+/* Button Base */
+button, .btn {
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 10px 24px;
+  letter-spacing: .02em;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: background .18s, color .16s, box-shadow .16s, transform .12s;
+  outline: none;
+}
+button.btn-secondary, .btn-secondary {
+  background: #F4F8FB;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+button.btn-accent, .btn-accent {
+  background: var(--accent);
+  color: var(--secondary);
+}
+button:disabled, .btn:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+}
+input, select {
+  font-family: inherit;
+  border-radius: 7px;
+  border: 1px solid var(--border-color);
+  padding: 9px 11px;
+  transition: border .12s;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
 button:focus-visible,
 a:focus-visible,
 select:focus-visible,
@@ -122,26 +177,41 @@ a:focus:not(:focus-visible) {
 
 /* High-contrast utility text classes */
 .text-contrast-strong {
-  color: #212529 !important;
+  color: var(--secondary) !important;
   font-weight: 800;
 }
 .text-contrast-secondary {
-  color: var(--text-secondary) !important;
+  color: var(--primary) !important;
   font-weight: 600;
+}
+
+/* Modern H2/H3 spacing */
+h2, .h2 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.8em;
+}
+h3, .h3 {
+  font-size: 1.26rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 0.5em;
 }
 
 /* Responsive pet card grid: stacking and margin tweaks */
 .pet-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 26px;
+  gap: 28px;
   width: 100%;
   margin: 0 auto;
+  padding: 0 4px;
 }
 
 @media (max-width: 1024px) {
   .pet-card-grid {
-    gap: 16px;
+    gap: 18px;
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   }
 }
@@ -150,12 +220,12 @@ a:focus:not(:focus-visible) {
   .theme-toggle {
     top: 10px;
     right: 10px;
-    padding: 8px 16px;
+    padding: 7px 14px;
     font-size: 12px;
   }
   .pet-card-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 12px;
   }
   .pet-card {
     max-width: 96vw !important;
@@ -169,7 +239,48 @@ a:focus:not(:focus-visible) {
   }
 }
 
+/* Card Styles */
+.pet-card {
+  background: var(--bg-secondary) !important;
+  border: 1.5px solid var(--border-color) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--shadow-md) !important;
+  padding: 20px 18px !important;
+  transition: box-shadow .13s, transform .13s;
+}
+.pet-card:hover, .pet-card:focus-within {
+  box-shadow: var(--shadow-lg) !important;
+  z-index: 4;
+  transform: translateY(-2px) scale(1.03);
+}
+
+/* Modal/dialog accessibility and responsiveness */
+[role="dialog"], .modal-dialog, .pet-detail-modal-backdrop > div {
+  max-width: 95vw !important;
+  width: 98vw !important;
+  overflow: auto;
+  background: var(--bg-primary) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+@media (max-width: 600px) {
+  [role="dialog"], .modal-dialog, .pet-detail-modal-backdrop > div {
+    padding: 8px !important;
+    max-width: 99vw !important;
+  }
+}
+
 /* Responsive main layout for filters + content (PetList) */
+.filters-pane aside[aria-label="Filter Pets"] {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  margin-right: 22px !important;
+  margin-bottom: 16px;
+  padding: 22px 18px;
+}
+
 @media (max-width: 900px) {
   .main-flexrow {
     flex-direction: column !important;
@@ -205,3 +316,4 @@ a:focus:not(:focus-visible) {
   width: 1px !important;
   white-space: nowrap !important;
 }
+/* End visually hidden */
