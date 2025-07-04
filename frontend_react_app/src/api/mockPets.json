@@ -1,0 +1,56 @@
+[
+  {
+    "id": "dog-001",
+    "name": "Buddy",
+    "breed": "Golden Retriever",
+    "age": 24,
+    "location": "San Francisco, CA",
+    "imageURL": "https://images.dog.ceo/breeds/retriever-golden/n02099601_3004.jpg",
+    "type": "dog"
+  },
+  {
+    "id": "cat-001",
+    "name": "Mittens",
+    "breed": "Tabby",
+    "age": 12,
+    "location": "New York, NY",
+    "imageURL": "https://cdn2.thecatapi.com/images/bpc.jpg",
+    "type": "cat"
+  },
+  {
+    "id": "dog-002",
+    "name": "Max",
+    "breed": "Border Collie",
+    "age": 36,
+    "location": "Portland, OR",
+    "imageURL": "https://images.dog.ceo/breeds/collie-border/n02106166_4338.jpg",
+    "type": "dog"
+  },
+  {
+    "id": "cat-002",
+    "name": "Shadow",
+    "breed": "Bombay",
+    "age": 18,
+    "location": "Austin, TX",
+    "imageURL": "https://cdn2.thecatapi.com/images/6qi.jpg",
+    "type": "cat"
+  },
+  {
+    "id": "dog-003",
+    "name": "Rocky",
+    "breed": "Boxer",
+    "age": 48,
+    "location": "Chicago, IL",
+    "imageURL": "https://images.dog.ceo/breeds/boxer/n02108089_15185.jpg",
+    "type": "dog"
+  },
+  {
+    "id": "cat-003",
+    "name": "Luna",
+    "breed": "Siamese",
+    "age": 8,
+    "location": "Seattle, WA",
+    "imageURL": "https://cdn2.thecatapi.com/images/ai6.jpg",
+    "type": "cat"
+  }
+]
