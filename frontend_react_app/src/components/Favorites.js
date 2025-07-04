@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useFavorites } from '../hooks/useFavorites';
-import { fetchAllPets } from '../api/petsApi';
+import { fetchAllPetsWithEnrichment } from '../api';
 import PetCard from './PetCard';
 
 // PUBLIC_INTERFACE
@@ -17,7 +17,7 @@ function Favorites() {
     let mounted = true;
     async function load() {
       setLoading(true);
-      const allPets = await fetchAllPets();
+      const allPets = await fetchAllPetsWithEnrichment();
       // Get pet objects in same order as favoriteIds
       const pets = favoriteIds.map(fid => allPets.find(p => p.id === fid)).filter(Boolean);
       if (mounted) {

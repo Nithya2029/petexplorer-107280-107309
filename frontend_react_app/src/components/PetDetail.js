@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchPetById } from "../api/petsApi";
+import { fetchPetByIdWithEnrichment } from "../api";
 
 /**
  * PUBLIC_INTERFACE
@@ -16,7 +16,7 @@ function PetDetail() {
   useEffect(() => {
     if (!petId) return;
     setLoading(true);
-    fetchPetById(petId).then((data) => {
+    fetchPetByIdWithEnrichment(petId).then((data) => {
       setPet(data);
       setLoading(false);
     });

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchAllPets } from "../api/petsApi";
+import { fetchAllPetsWithEnrichment } from "../api";
 
 // PUBLIC_INTERFACE
 function LandingPage() {
@@ -21,7 +21,7 @@ function LandingPage() {
   // Fetch all pets for filter options
   useEffect(() => {
     let mounted = true;
-    fetchAllPets().then((pets) => {
+    fetchAllPetsWithEnrichment().then((pets) => {
       if (mounted) {
         setAllPets(Array.isArray(pets) ? pets : []);
         setLoading(false);

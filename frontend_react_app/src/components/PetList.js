@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { fetchAllPets } from '../api/petsApi';
+import { fetchAllPetsWithEnrichment } from '../api';
 import PetCard from './PetCard';
 import Filters from './Filters';
 import Pagination from './Pagination';
@@ -45,10 +45,10 @@ function PetList() {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 6; // Show 6 pets per page by default
 
-  // Fetch pet data on mount
+  // Fetch pet data on mount (with enrichment/cache)
   useEffect(() => {
     let isMounted = true;
-    fetchAllPets().then(data => {
+    fetchAllPetsWithEnrichment().then(data => {
       if (isMounted) {
         setAllPets(Array.isArray(data) ? data : []);
         setLoading(false);
