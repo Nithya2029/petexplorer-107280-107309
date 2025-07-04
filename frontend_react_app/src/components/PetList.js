@@ -2,10 +2,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { fetchAllPets } from '../api/petsApi';
 import PetCard from './PetCard';
 import Filters from './Filters';
+import Pagination from './Pagination';
 
 /**
  * PUBLIC_INTERFACE
- * PetList - Fetches pet data and displays in a responsive card grid with filters.
+ * PetList - Fetches pet data and displays in a responsive card grid with filters and pagination.
  */
 function PetList() {
   const [allPets, setAllPets] = useState([]);
@@ -18,6 +19,10 @@ function PetList() {
     city: '',
   });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6; // Show 6 pets per page by default
+
   // Fetch pet data on mount
   useEffect(() => {
     let isMounted = true;
@@ -29,6 +34,11 @@ function PetList() {
     });
     return () => { isMounted = false; };
   }, []);
+
+  // Reset page 1 on filter change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters]);
 
   // PUBLIC_INTERFACE
   // Filtering logic based on selected filters.
@@ -55,6 +65,21 @@ function PetList() {
     () => allPets.filter(matchesFilter),
     [allPets, filters]
   );
+
+  // Paginate filtered pets
+  const totalPages = Math.max(1, Math.ceil(filteredPets.length / pageSize));
+  const pagedPets = filteredPets.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  // PUBLIC_INTERFACE
+  function handlePageChange(pageNum) {
+    if (pageNum >= 1 && pageNum <= totalPages && pageNum !== currentPage) {
+      setCurrentPage(pageNum);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
 
   return (
     <section
@@ -99,20 +124,27 @@ function PetList() {
       ) : filteredPets.length === 0 ? (
         <div style={{ textAlign: 'center', margin: 40, fontSize: 18 }}>No pets found.</div>
       ) : (
-        <div
-          className="pet-card-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: 26,
-            width: '100%',
-            margin: '0 auto'
-          }}
-        >
-          {filteredPets.map((pet) => (
-            <PetCard key={pet.id} pet={pet} />
-          ))}
-        </div>
+        <>
+          <div
+            className="pet-card-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              gap: 26,
+              width: '100%',
+              margin: '0 auto'
+            }}
+          >
+            {pagedPets.map((pet) => (
+              <PetCard key={pet.id} pet={pet} />
+            ))}
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
     </section>
   );
