@@ -90,7 +90,8 @@ function PetCard({ pet }) {
         </button>
         <img
           src={pet.imageURL}
-          alt={pet.name}
+          alt={`Photo of ${pet.name}, a ${pet.breed}, available in ${pet.location}`}
+          aria-label={`Photo of ${pet.name}, ${pet.breed}, in ${pet.location}`}
           style={{
             width: '100%',
             maxWidth: 210,

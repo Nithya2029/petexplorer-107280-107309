@@ -1,15 +1,31 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 // PUBLIC_INTERFACE
 function PetDetailModal({ pet, onClose }) {
   /**
    * PUBLIC_INTERFACE
-   * Modal showing detailed pet info and adoption contact options.
+   * Modal showing detailed pet info and adoption contact options, including initial keyboard focus and ESC-close.
    * 
    * @param {object} pet - Pet object with details.
    * @param {function} onClose - Callback to close modal.
    */
+  const closeBtnRef = useRef(null);
+  useEffect(() => {
+    // Focus on close button when modal opens
+    if (closeBtnRef.current) {
+      closeBtnRef.current.focus();
+    }
+    // Keyboard trap: close on ESC key
+    const escListener = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener("keydown", escListener);
+    return () => {
+      document.removeEventListener("keydown", escListener);
+    };
+  }, [onClose]);
+
   if (!pet) return null;
 
   // Construct mailto and WhatsApp links
@@ -53,6 +69,7 @@ function PetDetailModal({ pet, onClose }) {
       >
         <button
           aria-label="Close"
+          ref={closeBtnRef}
           onClick={onClose}
           style={{
             position: "absolute",
@@ -69,7 +86,8 @@ function PetDetailModal({ pet, onClose }) {
         </button>
         <img
           src={pet.imageURL}
-          alt={pet.name}
+          alt={`Photo of ${pet.name}, a ${pet.breed}`}
+          aria-label={`Photo of ${pet.name}, ${pet.breed}, in ${pet.location}`}
           style={{
             width: "100%",
             maxHeight: 190,
@@ -105,6 +123,7 @@ function PetDetailModal({ pet, onClose }) {
               display: "inline-block"
             }}
             target="_blank" rel="noopener noreferrer"
+            aria-label={`Email to Adopt ${pet.name}`}
           >
             Email to Adopt
           </a>
@@ -121,6 +140,7 @@ function PetDetailModal({ pet, onClose }) {
               display: "inline-block"
             }}
             target="_blank" rel="noopener noreferrer"
+            aria-label={`WhatsApp to Adopt ${pet.name}`}
           >
             WhatsApp
           </a>

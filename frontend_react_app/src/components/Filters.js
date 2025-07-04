@@ -68,12 +68,13 @@ function Filters({ pets, filters, onChange }) {
       </h3>
       {/* Breed Filter */}
       <div style={{ marginBottom: 14 }}>
-        <label htmlFor="breed" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
+        <label id="label-breed" htmlFor="breed" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
           Breed
         </label>
         <select
           id="breed"
           name="breed"
+          aria-labelledby="label-breed"
           value={filters.breed}
           onChange={handleChange}
           style={{
@@ -95,12 +96,13 @@ function Filters({ pets, filters, onChange }) {
       </div>
       {/* Age Group Filter */}
       <div style={{ marginBottom: 14 }}>
-        <label htmlFor="ageGroup" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
+        <label id="label-ageGroup" htmlFor="ageGroup" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
           Age Group
         </label>
         <select
           id="ageGroup"
           name="ageGroup"
+          aria-labelledby="label-ageGroup"
           value={filters.ageGroup}
           onChange={handleChange}
           style={{
@@ -121,12 +123,13 @@ function Filters({ pets, filters, onChange }) {
       </div>
       {/* City Filter */}
       <div style={{ marginBottom: 12 }}>
-        <label htmlFor="city" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
+        <label id="label-city" htmlFor="city" style={{ display: 'block', marginBottom: 4, color: 'var(--text-secondary)', fontWeight: 600 }}>
           City
         </label>
         <select
           id="city"
           name="city"
+          aria-labelledby="label-city"
           value={filters.city}
           onChange={handleChange}
           style={{

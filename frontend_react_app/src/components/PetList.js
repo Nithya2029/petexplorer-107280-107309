@@ -104,6 +104,7 @@ function PetList() {
       </h2>
       {/* Filters UI */}
       <div
+        className="main-flexrow"
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -112,11 +113,13 @@ function PetList() {
           marginBottom: 18,
         }}
       >
-        <Filters
-          pets={allPets}
-          filters={filters}
-          onChange={setFilters}
-        />
+        <div className="filters-pane">
+          <Filters
+            pets={allPets}
+            filters={filters}
+            onChange={setFilters}
+          />
+        </div>
         {/* Optional for future: search bar */}
       </div>
       {loading ? (

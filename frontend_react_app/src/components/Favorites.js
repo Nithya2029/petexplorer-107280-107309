@@ -47,29 +47,32 @@ function Favorites() {
         }}
         disabled={favoritePets.length === 0}
         aria-disabled={favoritePets.length === 0}
+        aria-label="Clear all favorites"
         title="Remove all favorites"
       >
         Clear All
       </button>
-      {loading ? (
-        <div style={{ color: 'var(--text-secondary)' }}>Loading favorites...</div>
-      ) : favoritePets.length === 0 ? (
-        <div>No favorites yet. Tap the ★ on a pet to add them here!</div>
-      ) : (
-        <div
-          className="pet-card-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: 22,
-            marginTop: 8
-          }}
-        >
-          {favoritePets.map(pet => (
-            <PetCard pet={pet} key={pet.id} />
-          ))}
-        </div>
-      )}
+      <div aria-live="polite" aria-atomic="true">
+        {loading ? (
+          <div style={{ color: 'var(--text-secondary)' }}>Loading favorites...</div>
+        ) : favoritePets.length === 0 ? (
+          <div>No favorites yet. Tap the ★ on a pet to add them here!</div>
+        ) : (
+          <div
+            className="pet-card-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: 22,
+              marginTop: 8
+            }}
+          >
+            {favoritePets.map(pet => (
+              <PetCard pet={pet} key={pet.id} />
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
