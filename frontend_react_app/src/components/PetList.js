@@ -16,24 +16,45 @@ function PetList() {
   // Support reading query params for filters
   const [searchParams] = useSearchParams();
 
-  // Filters state: breed, ageGroup, city
+  // Filters state: breed, ageRange (slider), location (dropdown)
   const [filters, setFilters] = useState({
     breed: '',
-    ageGroup: '',
-    city: '',
+    ageRange: [0, 48], // default to full range
+    location: '',
   });
 
   // On mount, sync filters from searchParams (URL query) if present
   useEffect(() => {
     const urlFilters = {};
-    for (const k of ['breed', 'ageGroup', 'city']) {
-      if (searchParams.get(k)) urlFilters[k] = searchParams.get(k);
+    // Accept old params for compatibility if present
+    if (searchParams.get('breed')) urlFilters.breed = searchParams.get('breed');
+    if (searchParams.get('location')) urlFilters.location = searchParams.get('location');
+    // Handle city param legacy
+    if (!urlFilters.location && searchParams.get('city')) urlFilters.location = searchParams.get('city');
+
+    // Age group mapping for legacy param
+    let defaultAge = [0, 48];
+    if (searchParams.get('ageGroup')) {
+      const ag = searchParams.get('ageGroup');
+      if (ag === 'baby') defaultAge = [0, 12];
+      else if (ag === 'young') defaultAge = [13, 36];
+      else if (ag === 'adult') defaultAge = [37, 96];
     }
-    if (
-      urlFilters.breed !== filters.breed ||
-      urlFilters.ageGroup !== filters.ageGroup ||
-      urlFilters.city !== filters.city
-    ) {
+    urlFilters.ageRange = defaultAge;
+
+    // Only update if changed
+    const notMatch =
+      (urlFilters.breed !== filters.breed) ||
+      (urlFilters.location !== filters.location) ||
+      (
+        urlFilters.ageRange &&
+        (
+          !filters.ageRange ||
+          urlFilters.ageRange[0] !== filters.ageRange[0] ||
+          urlFilters.ageRange[1] !== filters.ageRange[1]
+        )
+      );
+    if (notMatch) {
       setFilters((prev) => ({ ...prev, ...urlFilters }));
     }
     // eslint-disable-next-line
@@ -67,17 +88,19 @@ function PetList() {
   function matchesFilter(pet) {
     // breed
     if (filters.breed && pet.breed !== filters.breed) return false;
-    // city: extract city part and match
-    if (filters.city) {
+    // location: extract city part and match
+    if (filters.location) {
       const city = pet.location ? pet.location.split(',')[0].trim() : '';
-      if (city !== filters.city) return false;
+      if (city !== filters.location) return false;
     }
-    // age group
-    if (filters.ageGroup) {
-      const age = pet.age || 0;
-      if (filters.ageGroup === 'baby' && age > 12) return false;
-      if (filters.ageGroup === 'young' && (age <= 12 || age > 36)) return false;
-      if (filters.ageGroup === 'adult' && age <= 36) return false;
+    // age range: inclusive
+    if (
+      filters.ageRange &&
+      (typeof pet.age === 'number')
+    ) {
+      const age = pet.age;
+      const [minA, maxA] = filters.ageRange;
+      if (age < minA || age > maxA) return false;
     }
     return true;
   }
