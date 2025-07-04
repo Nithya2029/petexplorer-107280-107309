@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './App.css';
 import LandingPage from './components/LandingPage';
 import PetList from './components/PetList';
 import PetDetail from './components/PetDetail';
@@ -11,25 +10,18 @@ import { useFavorites } from './hooks/useFavorites';
 function Navbar() {
   /**
    * PUBLIC_INTERFACE
-   * Placeholder navbar with navigation links.
+   * Responsive Tailwind navbar with navigation links.
    */
   return (
-    <nav className="navbar" style={{
-      background: 'var(--bg-secondary)',
-      borderBottom: '1px solid var(--border-color)',
-      padding: '1rem 2rem',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between'
-    }}>
+    <nav className="navbar w-full bg-secondary border-b border-border-color py-3 px-5 flex items-center justify-between">
       <div>
-        <Link to="/" className="navbar-brand" style={{ fontWeight: 'bold', color: 'var(--text-primary)', textDecoration: 'none', fontSize: 22 }}>
+        <Link to="/" className="navbar-brand font-bold text-primary no-underline text-xl">
           PetExplorer
         </Link>
       </div>
-      <div>
-        <Link to="/" style={{ marginRight: 20, color: 'var(--text-secondary)', textDecoration: 'none' }}>Home</Link>
-        <Link to="/favorites" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Favorites</Link>
+      <div className="flex gap-6">
+        <Link to="/" className="text-accent no-underline font-semibold hover:underline">Home</Link>
+        <Link to="/favorites" className="text-accent no-underline font-semibold hover:underline">Favorites</Link>
       </div>
     </nav>
   );
@@ -39,17 +31,10 @@ function Navbar() {
 function Footer() {
   /**
    * PUBLIC_INTERFACE
-   * Placeholder footer with static content.
+   * Responsive Tailwind footer with static content.
    */
   return (
-    <footer style={{
-      background: 'var(--bg-secondary)',
-      borderTop: '1px solid var(--border-color)',
-      color: 'var(--text-secondary)',
-      textAlign: 'center',
-      padding: '1rem 0',
-      marginTop: 'auto'
-    }}>
+    <footer className="bg-secondary border-t border-border-color text-accent text-center py-4 mt-auto">
       &copy; {new Date().getFullYear()} PetExplorer - A KAVIA demo
     </footer>
   );
@@ -59,26 +44,11 @@ function Footer() {
 function FavoritesButton({ onClick }) {
   /**
    * PUBLIC_INTERFACE
-   * Placeholder floating favorites button.
+   * Responsive floating favorites button.
    */
   return (
     <button
-      className="favorites-btn"
-      style={{
-        position: 'fixed',
-        bottom: 32,
-        right: 32,
-        borderRadius: '50%',
-        background: 'var(--button-bg)',
-        color: 'var(--button-text)',
-        width: 56,
-        height: 56,
-        fontSize: 28,
-        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-        border: 'none',
-        cursor: 'pointer',
-        zIndex: 99,
-      }}
+      className="favorites-btn fixed bottom-8 right-8 rounded-full bg-primary text-white w-14 h-14 text-2xl shadow-lg border-none cursor-pointer z-50 flex items-center justify-center"
       title="View favorites"
       onClick={onClick}
       aria-label="Favorites"
@@ -117,22 +87,16 @@ function App() {
 
   return (
     <Router>
-      <div className="App" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className={`App min-h-screen flex flex-col font-sans transition-colors duration-300 ${theme === 'dark' ? 'bg-secondary text-white' : 'bg-white text-secondary'}`}>
         <Navbar />
         <button
-          className="theme-toggle"
+          className="theme-toggle absolute top-5 right-5 z-50 bg-accent text-secondary rounded-full px-6 py-2 text-base font-bold shadow-md transition-all duration-150 hover:bg-primary hover:text-white focus:outline-none"
           onClick={toggleTheme}
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            zIndex: 100
-          }}
         >
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
-        <main style={{ flex: '1 0 auto', padding: '2rem 0' }}>
+        <main className="flex-1 py-8">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/listings" element={<PetList />} />
@@ -150,36 +114,17 @@ function App() {
         {/* Modal overlay for favorites preview (optional, stubbed) */}
         {showFavs && (
           <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(0,0,0,0.4)',
-              zIndex: 500,
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+            className="fixed inset-0 bg-black bg-opacity-40 z-40 flex justify-center items-center"
             onClick={closeFavorites}
             aria-modal="true"
             role="dialog"
           >
-            <div style={{
-              background: 'white',
-              padding: 32,
-              borderRadius: 12,
-              maxWidth: 440,
-              minWidth: 280
-            }}>
+            <div className="bg-white p-8 rounded-lg max-w-md min-w-[280px]" onClick={e => e.stopPropagation()}>
               <Favorites />
-              <button style={{
-                marginTop: 16,
-                background: 'var(--button-bg)',
-                color: 'var(--button-text)',
-                border: 'none',
-                padding: '8px 18px',
-                borderRadius: 6,
-                cursor: 'pointer'
-              }} onClick={closeFavorites}>Close</button>
+              <button
+                className="mt-4 bg-primary text-white border-none px-5 py-2 rounded cursor-pointer"
+                onClick={closeFavorites}
+              >Close</button>
             </div>
           </div>
         )}
